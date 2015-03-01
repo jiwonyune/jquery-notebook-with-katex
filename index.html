@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>jQuery Notebook Demo</title>
+        <meta charset='utf-8'>
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="src/js/jquery.notebook.css">
+        <script type="text/javascript" src="src/js/libs/jquery-1.10.2.min.js"></script>
+    </head>
+    <body>
+        <div class="editor" id="editor"></div>
+        <script type="text/javascript" src="src/js/katex.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="src/js/katex.min.css">
+        <script type="text/javascript" src="src/js/jquery.notebook.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('.editor').notebook({
+                    autoFocus: true,
+                    placeholder: 'Type something awesome... (like "\\int_{-\\infty}^{\\infty}")'
+                });
+            });
+            var math_test = document.getElementById("editor");
+            // katex.render('\\int', math_test);
+        </script>
+    </body>
+</html>
