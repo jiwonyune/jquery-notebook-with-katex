@@ -288,7 +288,7 @@
                     'a': 'anchor',
                     'ul': 'ul',
                     'ol': 'ol',
-                    'math': 'math'
+                    'span': 'math'
                 };
                 for (var i = 0; i < formats.length; i++) {
                     var format = formats[i];
@@ -300,7 +300,7 @@
              * tags enclosing the selection.
              */
             checkForFormatting: function(currentNode, formats) {
-                var validFormats = ['b', 'i', 'u', 'h1', 'h2', 'ol', 'ul', 'li', 'a', 'math'];
+                var validFormats = ['b', 'i', 'u', 'h1', 'h2', 'ol', 'ul', 'li', 'a', 'span'];
                 if (currentNode.nodeName === '#text' ||
                     validFormats.indexOf(currentNode.nodeName.toLowerCase()) != -1) {
                     if (currentNode.nodeName != '#text') {
@@ -696,16 +696,30 @@
                 },
                 math: function(e) {
                     e.preventDefault();
-                    var sel = w.getSelection().toString();
-                    d.execCommand('insertHTML', false, '<span id="math"> </span>');
+                    if ($('button.math.active').length) {
+                        var original_id = $(w.getSelection().focusNode.parentElement).closest('.math').attr('id');
+                        var original_text = $(w.getSelection().focusNode.parentElement).closest('.math').attr('data-original_text');
+                        $("#"+original_id).remove();
+                        d.execCommand('insertHTML', false, original_text);
+                    } else {
+                        var text=w.getSelection().toString();
+                        var html=w.katex.renderToString(text);
+                        
+                        var uniqueID = "";
+                        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-                    var math = d.getElementById("math");
-                    w.katex.render(sel, math);
-                    // math.setAttribute("contenteditable", false);
-                    math.style.display="inline";
+                        for(var i=0;i<10;i++) {
+                            uniqueID += possible.charAt(Math.floor(Math.random() * possible.length));
+                        }
 
-                    bubble.update.call(math);
-                    events.change.call(math);
+                        console.log(html);
+
+                        d.execCommand('insertHTML', false, '<span class="math" id="'+uniqueID+'" contenteditable="false" style="display: inline;" data-original_text="'+text+'">'+html+'</span><p></p>');
+                    }
+
+                    bubble.update.call(this);
+                    bubble.clear.call(this);
+                    events.change.call(this);
                 }
             },
             enterKey: function(e) {
